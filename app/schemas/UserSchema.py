@@ -10,16 +10,22 @@ class PlannedTripsCreate(BaseModel):
 class PlannedTripsResponse(BaseModel):
     name: str
     description: str
-    budget: int 
+    budget: int
 
     class Config:
         from_attributes = True
+
+
 
 class UserCreateSchema(BaseModel):
     name: str
     email: str
     password: str
     trips: List[PlannedTripsResponse] = []
+
+class UserLoginSchema(BaseModel):
+    username: str
+    password: str
     
 class UserReturn(BaseModel):
     name: str
