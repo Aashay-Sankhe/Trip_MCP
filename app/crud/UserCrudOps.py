@@ -10,7 +10,7 @@ def get_all(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
-def extract_one(id: int, db: Session = Depends(get_db)):
+def get_one_user(id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id).first()
     if not user: raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -23,23 +23,20 @@ def delete_user(id: int, db: Session = Depends(get_db)):
     db.commit()
     return "User deleted successfully"
 
+
+
 def update_user(id: int, request: UserCreateSchema, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == id).first()
     if not user: raise HTTPException(status_code=404, detail="User not found")
     
     user.name = request.name
     user.email = request.email
-    user.password = request.password
+    user.hashed_password = request.password
     db.commit()
     db.refresh(user)
     return user
 
-def create_user(request: UserCreateSchema, db: Session = Depends(get_db)):
-    new_user = User(name=request.name, email=request.email, password=request.password)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
+
 
 def delete_all(db: Session = Depends(get_db)):
     db.query(User).delete()
