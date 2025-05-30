@@ -9,3 +9,7 @@ python-dotenv
 pydantic
 psycopg2-binary
 python-jose[cryptography]
+langchain-openai
+fastmcp
+httpx
+mcp-use

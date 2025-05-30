@@ -54,7 +54,33 @@ def get_current_user(token: str = Depends(oauth2_bearer), db: Session = Depends(
         return user
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+''' AUTHENTICATED USER CRUD OPERATIONS BELOW, UNCOMMENT TO USE'''
+
+'''
+def update_user(request: UserCreateSchema, token: str = Depends(oauth2_bearer), db: Session = Depends(get_db)):
+    user = get_current_user(token, db)
+    if not user: raise HTTPException(status_code=404, detail="User not found")
     
+    user.name = request.name
+    user.email = request.email
+    user.hashed_password = request.password
+    db.commit()
+    db.refresh(user)
+    return user
+
+def add_user_trip(request: PlannedTripsCreate, token: str = Depends(oauth2_bearer), db: Session = Depends(get_db)):
+    user = get_current_user(token, db)
+    if not user: raise HTTPException(status_code=404, detail="User not found")
+
+    new_trip = PlannedTrips(name=request.name, description=request.description, budget=request.budget)
+    db.add(new_trip)
+    db.commit()
+    db.refresh(new_trip)
+    return new_trip
+
+    
+
 def update_user_trip(trip_id: int, request: PlannedTripsCreate, token: str = Depends(oauth2_bearer), db: Session = Depends(get_db)):
     user = get_current_user(token, db)
     if not user: raise HTTPException(status_code=404, detail="User not found")
@@ -76,3 +102,4 @@ def update_user_trip(trip_id: int, request: PlannedTripsCreate, token: str = Dep
     db.commit()
     db.refresh(trip_to_update)
     return trip_to_update
+'''
