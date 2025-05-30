@@ -1,11 +1,9 @@
 from typing import List
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status
 from app.database_init import get_db
 from app.schemas.UserSchema import UserCreateSchema, UserReturn
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-from app.auth.AuthCrudOps import create_hashed_user, login_for_access, get_current_user, update_user_trip
-from app.schemas.UserSchema import PlannedTripsResponse, PlannedTripsCreate
+from app.auth.AuthCrudOps import create_hashed_user, login_for_access, get_current_user
 from app.auth.TokenSchema import Token
 from fastapi.security import OAuth2PasswordRequestForm
 from app.auth.AuthKeys import oauth2_bearer
@@ -29,7 +27,20 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 def get_logged_in_user(token: str = Depends(oauth2_bearer), db: Session = Depends(get_db)):
     return get_current_user(token, db)
 
+''' AUTHENTICATED USER ROUTES BELOW, UNCOMMENT TO USE'''
+
+'''
+
+
 @router.put("/user/trips/{trip_id}", response_model=PlannedTripsResponse)
 def update_user_plan(trip_id: int, request: PlannedTripsCreate, token: str = Depends(oauth2_bearer), db: Session = Depends(get_db)):
     return update_user_trip(trip_id, request, token, db)
 
+@router.put("/user", response_model=UserReturn)
+def update_user_info(request: UserCreateSchema, token: str = Depends(oauth2_bearer), db: Session = Depends(get_db)):
+    return update_user(request, token, db)
+
+@router.post("/user/trips", response_model=PlannedTripsResponse)
+def add_user_trip(request: PlannedTripsCreate, token: str = Depends(oauth2_bearer), db: Session = Depends(get_db)):
+    return add_user_trip(request, token, db)
+'''

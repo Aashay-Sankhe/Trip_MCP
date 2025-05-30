@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Depends, status
-from app.crud.UserCrudOps import get_all, update_user, delete_user, delete_all, add_plan, get_user_plans, get_one_user
+from app.crud.UserCrudOps import get_all, update_user, delete_user, add_plan, get_user_plans, get_one_user
 from app.database_init import get_db
 from app.schemas.UserSchema import UserCreateSchema, UserReturn, PlannedTripsResponse, PlannedTripsCreate
 from sqlalchemy.orm import Session
@@ -33,9 +33,6 @@ def update_existing_user(id: int, request: UserCreateSchema, db: Session = Depen
 def remove_user(id: int, db: Session = Depends(get_db)):
     return delete_user(id, db)
 
-@router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
-def remove_all_users(db: Session = Depends(get_db)):
-    return delete_all(db)
 
 @router.get("/{id}", response_model=UserReturn)
 def get_one_user_info(id:int, db: Session = Depends(get_db)):
